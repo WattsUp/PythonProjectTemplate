@@ -71,7 +71,7 @@ setup(
     packages=find_packages(),
     package_data={moduleFolder: []},
     install_requires=required,
-    tests_require=["json"],
+    tests_require=[],
     test_suite="tests",
     scripts=[],
     author="Bradley Davis",

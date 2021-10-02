@@ -34,7 +34,7 @@ Give example use cases
 ## Running Tests
 Explain how to run the automated tests.
 ```bash
-> python tests
+> python setup.py test
 ```
 ----
 ## Development
