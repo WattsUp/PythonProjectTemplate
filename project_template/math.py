@@ -1,12 +1,13 @@
 """Collection of mathematical functions
 
-Mainly functions that perform a set of mathematical operations on inputs and return outputs
+Mainly functions that perform a set of mathematical operations on inputs and
+return outputs.
 """
 
 from __future__ import annotations
 
 
-def addInt(a: int, b: int) -> int:
+def add_int(a: int, b: int) -> int:
   """Add two integers together
 
   Args:

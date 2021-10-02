@@ -1,3 +1,11 @@
+"""Setup and install project_template
+
+Typical usage:
+  python setup.py develop
+  python setup.py install
+  python setup.py test
+"""
+
 import numpy
 import os
 import setuptools
@@ -8,41 +16,44 @@ import setuptools.command.build_py
 
 from tools import gitsemver
 
-moduleFolder = "project_template"
+module_folder = "project_template"
 
-with open("README.md") as f:
-  longDescription = f.read()
+with open("README.md") as file:
+  longDescription = file.read()
 
-with open("requirements.txt") as f:
-  required = f.read().splitlines()
+with open("requirements.txt") as file:
+  required = file.read().splitlines()
 
 version = gitsemver.getVersion()
-with open(f"{moduleFolder}/version.py", "w") as file:
+with open(f"{module_folder}/version.py", "w") as file:
+  file.write('"""Module version information\n"""\n\n')
   file.write(f'version = "{version}"\n')
-  file.write(f'versionFull = "{version.fullStr()}"\n')
+  file.write(f'version_full = "{version.fullStr()}"\n')
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
 try:
-  from Cython.Build import cythonize
+  from Cython import Build
+  cythonize = Build.cythonize
 except ImportError:
 
   def cythonize(*args, **kwargs):
-    from Cython.Build import cythonize
-    return cythonize(*args, **kwargs)
+    # Defer import until after setuptools installs it
+    from Cython import Build as Build_defer# pylint: disable=import-outside-toplevel
+    return Build_defer.cythonize(*args, **kwargs)
 
 
-def findPyx(path="."):
-  pyxFiles = []
+def find_pyx(path="."):
+  pyx_files = []
   for root, _, filenames in os.walk(path):
-    for file in filenames:
+    for f in filenames:
       if file.endswith(".pyx"):
-        pyxFiles.append(os.path.join(root, file))
-  return pyxFiles
+        pyx_files.append(os.path.join(root, f))
+  return pyx_files
 
 
-def findCythonExtensions(path="."):
-  extensions = cythonize(findPyx(path), language_level=3)
+def find_cython_extensions(path="."):
+  extensions = cythonize(find_pyx(path), language_level=3)
   for ext in extensions:
     ext.include_dirs = [numpy.get_include()]
   return extensions
@@ -67,9 +78,9 @@ setup(
     long_description=longDescription,
     long_description_content_type="text/markdown",
     license="MIT",
-    ext_modules=findCythonExtensions(),
+    ext_modules=find_cython_extensions(),
     packages=find_packages(),
-    package_data={moduleFolder: []},
+    package_data={module_folder: []},
     install_requires=required,
     tests_require=[],
     test_suite="tests",
