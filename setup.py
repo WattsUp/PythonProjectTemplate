@@ -18,17 +18,17 @@ from tools import gitsemver
 
 module_folder = "project_template"
 
-with open("README.md") as file:
+with open("README.md", encoding="utf-8") as file:
   longDescription = file.read()
 
-with open("requirements.txt") as file:
+with open("requirements.txt", encoding="utf-8") as file:
   required = file.read().splitlines()
 
-version = gitsemver.getVersion()
-with open(f"{module_folder}/version.py", "w") as file:
+version = gitsemver.get_version()
+with open(f"{module_folder}/version.py", "w", encoding="utf-8") as file:
   file.write('"""Module version information\n"""\n\n')
   file.write(f'version = "{version}"\n')
-  file.write(f'version_full = "{version.fullStr()}"\n')
+  file.write(f'version_full = "{version.full_str()}"\n')
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
@@ -39,7 +39,7 @@ except ImportError:
 
   def cythonize(*args, **kwargs):
     # Defer import until after setuptools installs it
-    from Cython import Build as Build_defer# pylint: disable=import-outside-toplevel
+    from Cython import Build as Build_defer  # pylint: disable=import-outside-toplevel
     return Build_defer.cythonize(*args, **kwargs)
 
 
@@ -47,7 +47,7 @@ def find_pyx(path="."):
   pyx_files = []
   for root, _, filenames in os.walk(path):
     for f in filenames:
-      if file.endswith(".pyx"):
+      if f.endswith(".pyx"):
         pyx_files.append(os.path.join(root, f))
   return pyx_files
 
