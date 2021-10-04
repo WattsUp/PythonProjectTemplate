@@ -6,13 +6,10 @@ Typical usage:
   python setup.py test
 """
 
-import numpy
 import os
 import setuptools
-
-from setuptools import setup, find_packages
-import setuptools.command.develop
 import setuptools.command.build_py
+import setuptools.command.develop
 
 from tools import gitsemver
 
@@ -32,16 +29,6 @@ with open(f"{module_folder}/version.py", "w", encoding="utf-8") as file:
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
-try:
-  from Cython import Build
-  cythonize = Build.cythonize
-except ImportError:
-
-  def cythonize(*args, **kwargs):
-    # Defer import until after setuptools installs it
-    from Cython import Build as Build_defer  # pylint: disable=import-outside-toplevel
-    return Build_defer.cythonize(*args, **kwargs)
-
 
 def find_pyx(path="."):
   pyx_files = []
@@ -53,9 +40,16 @@ def find_pyx(path="."):
 
 
 def find_cython_extensions(path="."):
-  extensions = cythonize(find_pyx(path), language_level=3)
-  for ext in extensions:
-    ext.include_dirs = [numpy.get_include()]
+  pyx_files = find_pyx(path)
+  if len(pyx_files) == 0:
+    return []
+  import Cython  # pylint: disable=import-outside-toplevel
+  extensions = Cython.Build.cythonize(pyx_files, language_level=3)
+  if "numpy" in required:
+    import numpy  # pylint: disable=import-outside-toplevel
+
+    for ext in extensions:
+      ext.include_dirs = [numpy.get_include()]
   return extensions
 
 
@@ -71,7 +65,7 @@ class Develop(setuptools.command.develop.develop):
     setuptools.command.develop.develop.run(self)
 
 
-setup(
+setuptools.setup(
     name="PythonProjectTemplate",
     version=str(version),
     description="A template repository for Python projects",
@@ -79,7 +73,7 @@ setup(
     long_description_content_type="text/markdown",
     license="MIT",
     ext_modules=find_cython_extensions(),
-    packages=find_packages(),
+    packages=setuptools.find_packages(),
     package_data={module_folder: []},
     install_requires=required,
     tests_require=[],
