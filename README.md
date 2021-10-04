@@ -13,11 +13,11 @@ List of dependencies for package to run.
 ## Installation / Build / Deployment
 Install module
 ```bash
-> python setup.py install
+> python -m pip install .
 ```
 For development, install as a link to repository such that code changes are used.
 ```bash
-> python setup.py develop
+> python -m pip install -e .
 ```
 
 Execute module
