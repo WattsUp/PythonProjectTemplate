@@ -1,5 +1,4 @@
 # IDE files
-*.vscode
 *.code-workspace
 
 # Build artifacts
@@ -11,3 +10,9 @@ build
 dist
 *.c
 version.py
+
+# Test artifacts
+.test
+.coverage
+coverage.json
+test_log.json
