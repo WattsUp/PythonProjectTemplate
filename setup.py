@@ -52,4 +52,4 @@ setuptools.setup(
     python_requires=">=3.7",
     # include_package_data=True, # Leave out cause wacky
     zip_safe=False,
-    entry_poiints={"console_scripts": []})
+    entry_points={"console_scripts": []})
