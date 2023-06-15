@@ -4,8 +4,6 @@ Mainly functions that perform a set of mathematical operations on inputs and
 return outputs.
 """
 
-from __future__ import annotations
-
 
 def add_int(a: int, b: int) -> int:
   """Add two integers together

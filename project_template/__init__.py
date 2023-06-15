@@ -3,10 +3,8 @@
 Template repository for jump starting Python projects.
 """
 
-from . import version
+from project_template.version import __version__
 
-__version__ = version.version_full
+from project_template import math
 
 __all__ = ['math']
-
-from . import math
